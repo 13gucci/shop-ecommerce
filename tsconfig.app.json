@@ -20,10 +20,7 @@
         "noUnusedLocals": true, // Báo lỗi khi có biến cục bộ không sử dụng.
         "noUnusedParameters": true, // Báo lỗi khi có tham số hàm không sử dụng.
         "noFallthroughCasesInSwitch": true, // Báo lỗi nếu không có câu lệnh 'break' trong các trường hợp của switch.
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["src/*"]
-        }
+        "baseUrl": "."
     },
     // Chỉ định thư mục gốc (src) sẽ được bao gồm trong quá trình biên dịch.
     "include": ["src"]

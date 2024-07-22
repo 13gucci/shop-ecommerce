@@ -1,13 +1,9 @@
-import { useState } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import useRouteElements from 'src/hooks/useRouteElements';
 
 function App() {
-    const [count, setCount] = useState(0);
-
-    return (
-        <div className='bg-red-200'>
-            <div>123</div>
-        </div>
-    );
+    const router = useRouteElements();
+    return <RouterProvider router={router} />;
 }
 
 export default App;
