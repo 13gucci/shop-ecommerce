@@ -1,27 +1,30 @@
 {
-  "compilerOptions": {
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
-  },
-  "include": ["src"]
+    "compilerOptions": {
+        "composite": true, // Cho phép biên dịch từng phần để tăng tốc độ biên dịch.
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo", // Đặt vị trí tệp lưu trữ thông tin về biên dịch từng phần.
+        "target": "ESNext", // Đặt phiên bản JavaScript được sử dụng cho mã xuất ra là phiên bản mới nhất
+        "useDefineForClassFields": true, // Cho phép sử dụng từ khóa 'define' cho các thuộc tính của lớp (đề xuất mới).
+        "lib": ["ESNext", "DOM", "DOM.Iterable"], // Bao gồm các thư viện cần thiết cho JavaScript mới nhất và các tính năng của trình duyệt.
+        "module": "ESNext", // Đặt hệ thống mô-đun là ESNext để sử dụng mô-đun ECMAScript mới nhất.
+        "skipLibCheck": true, // Không kiểm tra các tệp khai báo (.d.ts) để tăng tốc độ biên dịch.
+        /* Chế độ Bundler */
+        "moduleResolution": "bundler", // Sử dụng chiến lược giải quyết mô-đun dành cho các công cụ đóng gói hiện đại (bundlers).
+        "allowImportingTsExtensions": true, // Cho phép nhập các tệp TypeScript với phần mở rộng.
+        "resolveJsonModule": true, // Cho phép nhập các tệp JSON.
+        "isolatedModules": true, // Xử lý mỗi tệp như một mô-đun riêng biệt, hữu ích cho công cụ đóng gói.
+        "moduleDetection": "force", // Bắt buộc phải khai báo rõ ràng khi nhập khẩu mô-đun.
+        "noEmit": true, // Không tạo ra các tệp JavaScript từ TypeScript (chỉ kiểm tra lỗi, không xuất file).
+        "jsx": "react-jsx", // Hỗ trợ cú pháp JSX cho React và chỉ định React là công cụ xử lý JSX.
+        /* Kiểm tra lỗi */
+        "strict": true, // Bật tất cả các kiểm tra chặt chẽ của TypeScript để tránh lỗi.
+        "noUnusedLocals": true, // Báo lỗi khi có biến cục bộ không sử dụng.
+        "noUnusedParameters": true, // Báo lỗi khi có tham số hàm không sử dụng.
+        "noFallthroughCasesInSwitch": true, // Báo lỗi nếu không có câu lệnh 'break' trong các trường hợp của switch.
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    },
+    // Chỉ định thư mục gốc (src) sẽ được bao gồm trong quá trình biên dịch.
+    "include": ["src"]
 }
