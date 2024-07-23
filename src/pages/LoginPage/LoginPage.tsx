@@ -1,12 +1,27 @@
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import HidePasswordIcon from 'src/common/HidePasswordIcon';
 import QRLoginLogo from 'src/common/QRLoginLogo';
 import VisiblePasswordIcon from 'src/common/VisiblePasswordIcon';
+import CustomInput from 'src/components/CustomInput';
 import { PATHS } from 'src/constants/navPaths';
+import { LoginFormType, LoginSchema } from 'src/schema/AuthenticationSchema';
+import authenticateSerivce from 'src/services/auth.services';
 
 export default function LoginPage() {
+    const {
+        register,
+        formState: { errors },
+        handleSubmit
+    } = useForm<LoginFormType>({
+        resolver: yupResolver(LoginSchema)
+    });
+
     const [isShowQr, setIsShowQr] = useState<boolean>(false);
     const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false);
 
@@ -18,13 +33,23 @@ export default function LoginPage() {
         setIsShowQr(false);
     };
 
+    const { mutate: loginMutation, isPending } = useMutation({
+        mutationFn: (body: LoginFormType) => authenticateSerivce.login(body)
+    });
+
+    const onSubmit: SubmitHandler<LoginFormType> = (data) => {
+        loginMutation(data, {
+            onSuccess: (data) => {}
+        });
+    };
+
     return (
         <>
             <div className='bg-shopeeOrange'>
                 <div className='mx-auto max-w-[1200px] px-4'>
                     <div className='grid h-[600px] grid-cols-1 bg-main bg-contain bg-center bg-no-repeat py-5 md:grid-cols-4 lg:grid-cols-5 lg:py-[60px]'>
                         <div className='col-span-1 md:col-span-2 md:col-start-2 lg:col-span-2 lg:col-start-4'>
-                            <form className='rounded bg-white p-6 shadow-sm lg:w-[400px]'>
+                            <form onSubmit={handleSubmit(onSubmit)} className='rounded bg-white p-6 shadow-sm lg:w-[400px]' noValidate>
                                 {/* Header form */}
                                 <div className='flex items-center justify-between'>
                                     <div className='text-xl font-normal'>Đăng nhập</div>
@@ -39,24 +64,22 @@ export default function LoginPage() {
 
                                 {/* Main */}
 
-                                <div className='mt-7'>
-                                    {/* Field input */}
-                                    <input
-                                        type='email'
-                                        name='email'
-                                        placeholder='Email/Số điện thoại/Tên đăng nhập'
-                                        className='h-10 w-full rounded-sm border border-gray-300 px-3 text-sm outline-none placeholder:text-[13px] placeholder:text-gray-300 focus:border-[1px] focus:border-gray-600 focus:bg-gray-50 focus:shadow-sm'
-                                    />
-                                    {/* Error message */}
-                                    <div className='mt-1 min-h-[1.5rem] text-[12px] text-textError'>Vui lòng điền vào trường này.</div>
-                                </div>
+                                <CustomInput
+                                    name='email'
+                                    register={register}
+                                    type='email'
+                                    className='mt-7'
+                                    errorMessage={errors.email?.message}
+                                    placeholder='Email/Tên tài khoản/Số điện thoại'
+                                />
 
-                                <div className='mt-2'>
+                                <div className='mt-1'>
                                     {/* Field input */}
                                     <div className='group flex h-10 rounded-sm border border-gray-300 focus-within:border-gray-600 focus-within:bg-gray-50 focus-within:shadow-sm'>
                                         <input
                                             type={isVisiblePassword ? 'text' : 'password'}
                                             placeholder='Mật khẩu'
+                                            {...register('password')}
                                             className='h-full w-[90%] px-3 outline-none placeholder:text-[13px] placeholder:text-gray-300 group-focus-within:border-gray-600 group-focus-within:bg-gray-50'
                                         />
                                         <button
@@ -68,11 +91,17 @@ export default function LoginPage() {
                                         </button>
                                     </div>
                                     {/* Error message */}
-                                    <div className='mt-1 min-h-[1.5rem] text-[12px] text-textError'>Vui lòng điền vào trường này.</div>
+                                    <div className='mt-1 min-h-[1.5rem] text-[12px] text-textError'>{errors.password?.message}</div>
                                 </div>
 
                                 <div className='mt-5'>
-                                    <button className='h-10 w-full bg-shopeeOrange text-sm uppercase text-white'>Đăng nhập</button>
+                                    <button
+                                        type='submit'
+                                        disabled={isPending}
+                                        className='h-10 w-full bg-shopeeOrange text-sm uppercase text-white'
+                                    >
+                                        {isPending ? 'Loading...' : 'Đăng nhập'}
+                                    </button>
                                 </div>
 
                                 <div className='mt-2'>
