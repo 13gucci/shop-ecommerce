@@ -1,6 +1,6 @@
 import React from 'react';
+import AuthenticationHeader from 'src/components/AuthenticationHeader';
 import Footer from 'src/components/Footer';
-import Header from 'src/components/Header/Header';
 
 type Props = {
     children?: React.ReactNode;
@@ -9,8 +9,9 @@ type Props = {
 export default function AuthenticationLayout({ children }: Props) {
     return (
         <React.Fragment>
-            <Header />
+            <AuthenticationHeader />
             {children}
+            <div className='h-[1000px]'></div>
             <Footer />
         </React.Fragment>
     );
