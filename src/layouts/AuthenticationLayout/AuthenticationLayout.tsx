@@ -11,7 +11,6 @@ export default function AuthenticationLayout({ children }: Props) {
         <React.Fragment>
             <AuthenticationHeader />
             {children}
-            <div className='h-[1000px]'></div>
             <Footer />
         </React.Fragment>
     );
