@@ -9,7 +9,7 @@ export default function AuthenticationHeader() {
     return (
         <header className='py-5'>
             {/* Container */}
-            <div className='mx-auto max-w-[1200px] px-4'>
+            <div className='container'>
                 <div className='flex items-center justify-between'>
                     <nav className='flex items-end'>
                         <Link to={PATHS.AUTH_PAGES.HOME} className='px-4'>

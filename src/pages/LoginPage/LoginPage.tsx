@@ -1,21 +1,24 @@
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import HidePasswordIcon from 'src/common/HidePasswordIcon';
 import QRLoginLogo from 'src/common/QRLoginLogo';
 import VisiblePasswordIcon from 'src/common/VisiblePasswordIcon';
 import CustomInput from 'src/components/CustomInput';
 import { PATHS } from 'src/constants/navPaths';
+import { TitlePages } from 'src/constants/titlePage';
 import { LoginFormType, LoginSchema } from 'src/schema/AuthenticationSchema';
 import authenticateSerivce from 'src/services/auth.services';
+import { TCommonResponse } from 'src/types/common.type';
+import { isUnprocessableEntityError } from 'src/utils/error';
 
 export default function LoginPage() {
     const {
         register,
+        setError,
         formState: { errors },
         handleSubmit
     } = useForm<LoginFormType>({
@@ -24,6 +27,10 @@ export default function LoginPage() {
 
     const [isShowQr, setIsShowQr] = useState<boolean>(false);
     const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false);
+
+    useEffect(() => {
+        document.title = TitlePages.LOGIN;
+    }, []);
 
     const toggleVisiblePassword = () => {
         setIsVisiblePassword((prevState) => !prevState);
@@ -39,14 +46,26 @@ export default function LoginPage() {
 
     const onSubmit: SubmitHandler<LoginFormType> = (data) => {
         loginMutation(data, {
-            onSuccess: (data) => {}
+            onError: (err) => {
+                if (isUnprocessableEntityError<TCommonResponse<LoginFormType>>(err)) {
+                    const objErrorForm = err.response?.data.data;
+                    if (objErrorForm) {
+                        Object.keys(objErrorForm).forEach((key) => {
+                            setError(key as keyof LoginFormType, {
+                                message: objErrorForm[key as keyof LoginFormType],
+                                type: 'server'
+                            });
+                        });
+                    }
+                }
+            }
         });
     };
 
     return (
         <>
             <div className='bg-shopeeOrange'>
-                <div className='mx-auto max-w-[1200px] px-4'>
+                <div className='container'>
                     <div className='grid h-[600px] grid-cols-1 bg-main bg-contain bg-center bg-no-repeat py-5 md:grid-cols-4 lg:grid-cols-5 lg:py-[60px]'>
                         <div className='col-span-1 md:col-span-2 md:col-start-2 lg:col-span-2 lg:col-start-4'>
                             <form onSubmit={handleSubmit(onSubmit)} className='rounded bg-white p-6 shadow-sm lg:w-[400px]' noValidate>
@@ -62,9 +81,8 @@ export default function LoginPage() {
                                     </button>
                                 </div>
 
-                                {/* Main */}
-
                                 <CustomInput
+                                    autoComplete='on'
                                     name='email'
                                     register={register}
                                     type='email'

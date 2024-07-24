@@ -1,10 +1,18 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const plugin = require('tailwindcss/plugin');
+
+//Keep @type nearest with module.exports
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+    corePlugins: {
+        container: false
+    },
     theme: {
         extend: {
             colors: {
                 shopeeOrange: '#ee4d2d',
+                shopeeOrange2: '#fb5431',
                 footerBlack: '#000000a6',
                 footerBackground: '#f5f5f5',
                 textError: '#ff424f'
@@ -14,5 +22,17 @@ module.exports = {
             }
         }
     },
-    plugins: []
+    plugins: [
+        plugin(function ({ addComponents }) {
+            addComponents({
+                '.container': {
+                    maxWidth: '1200px',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    paddingLeft: '16px',
+                    paddingRight: '16px'
+                }
+            });
+        })
+    ]
 };
