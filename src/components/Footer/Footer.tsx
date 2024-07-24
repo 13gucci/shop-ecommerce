@@ -6,11 +6,11 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
     return (
-        <footer className='py-12 bg-footerBackground'>
+        <footer className='bg-footerBackground py-12'>
             {/* Container */}
-            <div className='max-w-[1200px] mx-auto px-4'>
+            <div className='container'>
                 {/* List Col */}
-                <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-5 text-left'>
+                <div className='grid grid-cols-1 gap-5 text-left md:grid-cols-3 xl:grid-cols-5'>
                     <FooterCol title='Chăm sóc khác hàng'>
                         <FooterMenu menu={customerServices} />
                     </FooterCol>
@@ -29,7 +29,7 @@ export default function Footer() {
                         <ul>
                             {contactsUs.map((menu, index) => (
                                 <li key={index}>
-                                    <Link to={menu.urlContact} className='flex items-center mb-3 gap-2 text-footerBlack'>
+                                    <Link to={menu.urlContact} className='mb-3 flex items-center gap-2 text-footerBlack'>
                                         <img src={menu.url} alt={menu.title} />
                                         <span>{menu.title}</span>
                                     </Link>
@@ -40,7 +40,7 @@ export default function Footer() {
                     <FooterCol title='tải ứng dụng shoppe ngay thôi'>
                         <div className='flex'>
                             <img
-                                className='inline-block bg-white rounded-sm shadow-sm mr-3 p-1'
+                                className='mr-3 inline-block rounded-sm bg-white p-1 shadow-sm'
                                 src='https://down-vn.img.susercontent.com/file/a5e589e8e118e937dc660f224b9a1472'
                                 alt=''
                             />
@@ -51,7 +51,7 @@ export default function Footer() {
                     </FooterCol>
                 </div>
 
-                <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 py-10 mt-10 text-center   border-t-[0.5px] text-sm text-footerBlack'>
+                <div className='mt-10 grid grid-cols-1 gap-4 border-t-[0.5px] py-10 text-center text-sm text-footerBlack lg:grid-cols-3'>
                     <div className='lg:col-span-1'>© 2024 Shopee. Tất cả các quyền được bảo lưu.</div>
                     <div className='lg:col-span-2'>
                         Quốc gia & Khu vực: Singapore Indonesia Thái Lan Malaysia Việt Nam Philippines Brazil México Colombia Chile Đài Loan
