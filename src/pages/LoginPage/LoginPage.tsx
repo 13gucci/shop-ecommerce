@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import HidePasswordIcon from 'src/common/HidePasswordIcon';
 import QRLoginLogo from 'src/common/QRLoginLogo';
 import VisiblePasswordIcon from 'src/common/VisiblePasswordIcon';
+import CustomButton from 'src/components/CustomButton';
 import CustomInput from 'src/components/CustomInput';
 import { PATHS } from 'src/constants/navPaths';
 import { TitlePages } from 'src/constants/titlePage';
@@ -48,8 +49,16 @@ export default function LoginPage() {
 
     const onSubmit: SubmitHandler<LoginFormType> = (data) => {
         loginMutation(data, {
-            onSuccess: () => {
-                dispatch({ type: 'SET_AUTHENTICATED', payload: true });
+            onSuccess: (data) => {
+                if (data.data.data) {
+                    dispatch({
+                        type: 'LOGIN',
+                        payload: {
+                            isLoggedIn: true,
+                            userProfile: data.data.data.user
+                        }
+                    });
+                }
             },
             onError: (err) => {
                 if (isUnprocessableEntityError<TCommonResponse<LoginFormType>>(err)) {
@@ -118,13 +127,13 @@ export default function LoginPage() {
                                 </div>
 
                                 <div className='mt-5'>
-                                    <button
+                                    <CustomButton
+                                        isLoading={isPending}
                                         type='submit'
-                                        disabled={isPending}
                                         className='h-10 w-full bg-shopeeOrange text-sm uppercase text-white'
                                     >
-                                        {isPending ? 'Loading...' : 'Đăng nhập'}
-                                    </button>
+                                        Đăng nhập
+                                    </CustomButton>
                                 </div>
 
                                 <div className='mt-2'>

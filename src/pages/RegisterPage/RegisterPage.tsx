@@ -4,6 +4,7 @@ import { omit } from 'lodash';
 import { useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import CustomButton from 'src/components/CustomButton';
 import CustomInput from 'src/components/CustomInput';
 import { PATHS } from 'src/constants/navPaths';
 import { TitlePages } from 'src/constants/titlePage';
@@ -36,7 +37,13 @@ export default function RegisterPage() {
         const body = omit(data, ['confirm_password']);
         registerMutation(body, {
             onSuccess: () => {
-                dispatch({ type: 'SET_AUTHENTICATED', payload: true });
+                dispatch({
+                    type: 'LOGIN',
+                    payload: {
+                        isLoggedIn: true,
+                        userProfile: null
+                    }
+                });
             },
             onError: (err) => {
                 if (isUnprocessableEntityError<TCommonResponse<Omit<RegisterFormType, 'confirm_password'>>>(err)) {
@@ -96,13 +103,13 @@ export default function RegisterPage() {
                             />
 
                             <div className='mt-5'>
-                                <button
-                                    disabled={isPending}
+                                <CustomButton
+                                    isLoading={isPending}
                                     type='submit'
                                     className='h-10 w-full bg-shopeeOrange text-sm uppercase text-white'
                                 >
-                                    {isPending ? 'Loading...' : 'Đăng ký'}
-                                </button>
+                                    Đăng ký
+                                </CustomButton>
                             </div>
 
                             <div className='mt-3 flex items-center'>

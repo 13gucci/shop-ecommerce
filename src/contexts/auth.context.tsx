@@ -1,6 +1,6 @@
 import { createContext, Dispatch, useReducer } from 'react';
 import { TUser } from 'src/types/user.type';
-import { getTokenFromLocalStorage } from 'src/utils/local_storage';
+import { getTokenFromLocalStorage, getUserProfileFromLocalStorage } from 'src/utils/local_storage';
 
 type Props = {
     children: React.ReactNode;
@@ -13,12 +13,14 @@ type TStateReducer = {
 
 type TActionReducer =
     | {
-          type: 'SET_AUTHENTICATED';
-          payload: boolean;
+          type: 'LOGIN';
+          payload: {
+              isLoggedIn: boolean;
+              userProfile: TUser | null;
+          };
       }
     | {
-          type: 'SET_USER_PROFILE';
-          payload: TUser;
+          type: 'LOGOUT';
       };
 
 type TAuthContext = {
@@ -29,7 +31,7 @@ type TAuthContext = {
 const initialStateContext = {
     auth: {
         isAuthenticated: Boolean(getTokenFromLocalStorage('access_token')),
-        userProfile: null
+        userProfile: getUserProfileFromLocalStorage()
     },
     dispatch: () => {}
 };
@@ -38,10 +40,10 @@ export const AuthContext = createContext<TAuthContext>(initialStateContext);
 
 const reducer = (state: TStateReducer, action: TActionReducer) => {
     switch (action.type) {
-        case 'SET_AUTHENTICATED':
-            return { ...state, isAuthenticated: action.payload };
-        case 'SET_USER_PROFILE':
-            return { ...state, userProfile: action.payload };
+        case 'LOGIN':
+            return { ...state, isAuthenticated: action.payload.isLoggedIn, userProfile: action.payload.userProfile };
+        case 'LOGOUT':
+            return { ...state, isAuthenticated: false, userProfile: null };
         default:
             return state;
     }

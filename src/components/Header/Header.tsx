@@ -18,7 +18,7 @@ export default function Header() {
     const { mutate: logoutMutation } = useMutation({
         mutationFn: () => authenticateSerivce.logout(),
         onSuccess: () => {
-            dispatch({ type: 'SET_AUTHENTICATED', payload: false });
+            dispatch({ type: 'LOGOUT' });
         }
     });
 
@@ -97,7 +97,7 @@ export default function Header() {
                                         <Link className='px-4 py-3 hover:bg-gray-50 hover:text-cyan-500' to={'/profile'}>
                                             Tài khoản của tôi
                                         </Link>
-                                        <Link className='px-4 py-3 hover:bg-gray-50 hover:text-cyan-500' to={'/'}>
+                                        <Link className='px-4 py-3 hover:bg-gray-50 hover:text-cyan-500' to={'/cart'}>
                                             Đơn mua
                                         </Link>
                                         <button onClick={handleLogout} className='px-4 py-3 text-left hover:bg-gray-50 hover:text-cyan-500'>
@@ -115,7 +115,7 @@ export default function Header() {
                                         alt=''
                                     />
                                 </div>
-                                <div>minhtrnquang996</div>
+                                <div>{auth.userProfile?.email}</div>
                             </Popover>
                         )}
                     </ul>
@@ -142,7 +142,7 @@ export default function Header() {
                     </div>
                     <Popover
                         renderPopover={
-                            <div className='w-[400px] rounded-sm border bg-white'>
+                            <div className='w-[400px] rounded-sm border bg-white shadow-md'>
                                 {/* Header */}
                                 <p className='p-2 text-base capitalize text-gray-400'>Sản phẩm mới thêm</p>
                                 <ul>
