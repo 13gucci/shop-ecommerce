@@ -2,12 +2,21 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BellIcon, CartIcon, ChevronIcon, GlobalIcon, QuestionMarkIcon, SearchIcon } from 'src/common/Icon/HeaderIcon';
 import MainLogo from 'src/common/MainLogo';
+import Popover from 'src/components/Popover';
 import { headerContacts } from 'src/constants/headerUrl';
 import { PATHS } from 'src/constants/navPaths';
 
 export default function Header() {
+    const [onChangeForm, setOnChangeForm] = useState(false);
     const [isAuthen] = useState(false);
-    const [isShowSuggestResult] = useState<boolean>(false);
+
+    const handleOnChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value !== '') {
+            setOnChangeForm(true);
+        } else {
+            setOnChangeForm(false);
+        }
+    };
 
     return (
         <header className='bg-gradient-to-b from-[#f53d2d] to-[#f63] pb-5 pt-1'>
@@ -38,12 +47,23 @@ export default function Header() {
                             <QuestionMarkIcon />
                             Hỗ trợ
                         </li>
-                        <li className='flex cursor-pointer items-center capitalize hover:text-gray-300'>
+
+                        <Popover
+                            renderPopover={
+                                <div className='flex flex-col rounded-sm border bg-white px-2 py-3'>
+                                    <button className='px-3 py-2 hover:text-red-400'>Tiếng Việt</button>
+                                    <button className='px-3 py-2 hover:text-red-400'>Tiếng Anh</button>
+                                </div>
+                            }
+                            as='li'
+                            className='flex cursor-pointer items-center capitalize hover:text-gray-300'
+                        >
                             <GlobalIcon />
                             Tiếng Việt
                             <ChevronIcon />
-                        </li>
+                        </Popover>
                         {/* Unauthenticated */}
+
                         {isAuthen ? (
                             <>
                                 <li className='flex cursor-pointer items-center font-medium hover:text-gray-300'>
@@ -55,7 +75,21 @@ export default function Header() {
                                 </li>
                             </>
                         ) : (
-                            <li className='flex cursor-pointer items-center text-sm font-normal hover:text-gray-300'>
+                            <Popover
+                                renderPopover={
+                                    <div className='flex flex-col bg-white'>
+                                        <Link className='px-4 py-3 hover:bg-gray-50 hover:text-cyan-500' to={'/'}>
+                                            Tài khoản của tôi
+                                        </Link>
+                                        <Link className='px-4 py-3 hover:bg-gray-50 hover:text-cyan-500' to={'/'}>
+                                            Đơn mua
+                                        </Link>
+                                        <button className='px-4 py-3 text-left hover:bg-gray-50 hover:text-cyan-500'>Đăng xuất</button>
+                                    </div>
+                                }
+                                className='flex cursor-pointer items-center text-sm font-normal hover:text-gray-300'
+                                as={'li'}
+                            >
                                 <div className='mr-2 h-6 w-6 flex-shrink-0'>
                                     <img
                                         className='h-full w-full rounded-full bg-white object-cover'
@@ -64,7 +98,7 @@ export default function Header() {
                                     />
                                 </div>
                                 <div>minhtrnquang996</div>
-                            </li>
+                            </Popover>
                         )}
                     </ul>
                 </nav>
@@ -77,21 +111,61 @@ export default function Header() {
                     <div className='col-span-9 col-start-3'>
                         <form className='relative flex h-10 w-full items-center gap-3 rounded-sm bg-white p-1 shadow-sm'>
                             <input
+                                onChange={handleOnChangeForm}
                                 type='search'
                                 placeholder='FREE SHIP TỪ ĐƠN 0Đ'
-                                className='ml-2 w-[92%] -translate-x-1 placeholder:font-normal focus:outline focus:outline-[1.5px] focus:outline-offset-[13px] focus:outline-black'
+                                className='ml-2 w-[92%] -translate-x-1 placeholder:font-light focus:outline focus:outline-[1.5px] focus:outline-offset-[13px] focus:outline-black'
                             />
                             <button type='submit' className='h-[34px] w-[8%] rounded-sm bg-shopeeOrange px-4 hover:bg-opacity-95'>
                                 <SearchIcon className='mx-auto h-4 w-4 font-bold text-white' />
                             </button>
-                            {isShowSuggestResult && (
-                                <div className='absolute bottom-0 right-0 top-full mt-2 h-[70px] w-full bg-blue-200'></div>
-                            )}
+                            {!!onChangeForm && <div className='absolute bottom-0 left-0 right-0 translate-y-6 transform bg-white'>123</div>}
                         </form>
                     </div>
-                    <Link to='/' className='col-span-1 flex items-center justify-center'>
-                        <CartIcon className='h-7 w-7 text-white' />
-                    </Link>
+                    <Popover
+                        renderPopover={
+                            <div className='w-[400px] rounded-sm border bg-white'>
+                                {/* Header */}
+                                <p className='p-2 text-base capitalize text-gray-400'>Sản phẩm mới thêm</p>
+                                <ul>
+                                    {Array(5)
+                                        .fill(0)
+                                        .map((_, index) => (
+                                            <li key={index}>
+                                                <Link to={'/'} className='flex p-2 text-sm hover:bg-gray-100'>
+                                                    <img
+                                                        src='https://down-vn.img.susercontent.com/file/vn-11134201-23020-n6grtz4qgnnv23'
+                                                        className='h-[60px] w-[60px] object-cover'
+                                                        alt=''
+                                                    />
+                                                    <div className='ml-2 flex-grow overflow-hidden'>
+                                                        <div className='truncate'>
+                                                            Dép đúc quai ngang vân gỗ nam, nữ siêu nhẹ DUWA - Hàng chính hãng - SH211
+                                                        </div>
+                                                    </div>
+                                                    <div className='ml-2 flex-shrink-0 text-orange-500'>
+                                                        <span>đ 20000</span>
+                                                    </div>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                </ul>
+                                <div className='flex items-center justify-between bg-gray-50 p-2'>
+                                    <div className='text-sm'>Thêm hàng vào giỏ hàng</div>
+                                    <Link
+                                        to={'/'}
+                                        className='rounded-sm bg-shopeeOrange px-4 py-2 text-sm capitalize text-white hover:opacity-90'
+                                    >
+                                        Xem giỏ hàng
+                                    </Link>
+                                </div>
+                            </div>
+                        }
+                    >
+                        <Link to='/' className='col-span-1 flex items-center justify-center'>
+                            <CartIcon className='h-7 w-7 text-white' />
+                        </Link>
+                    </Popover>
                 </nav>
             </div>
         </header>

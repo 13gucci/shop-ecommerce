@@ -1,5 +1,4 @@
-import axios, { AxiosInstance, isAxiosError, HttpStatusCode } from 'axios';
-import { isUnprocessableEntityError } from './error';
+import axios, { AxiosInstance, HttpStatusCode, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 
 class HttpClient {
@@ -26,6 +25,7 @@ class HttpClient {
             }
         );
 
+        // Block to manage response if error is not 422 then toast
         this.axiosInstance.interceptors.response.use(
             function (response) {
                 return response;
