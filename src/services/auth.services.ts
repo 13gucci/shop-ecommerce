@@ -22,6 +22,10 @@ class AuthenticateService {
     public login = (payload: { email: string; password: string }) => {
         return httpClient.post<TCommonResponse<TLoginReponse>>(API_ENDPOINTs.LOGIN, payload);
     };
+
+    public logout = () => {
+        return httpClient.post(API_ENDPOINTs.LOGOUT);
+    };
 }
 
 const authenticateSerivce = AuthenticateService.getInstance();

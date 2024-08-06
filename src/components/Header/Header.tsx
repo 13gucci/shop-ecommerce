@@ -1,14 +1,26 @@
-import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BellIcon, CartIcon, ChevronIcon, GlobalIcon, QuestionMarkIcon, SearchIcon } from 'src/common/Icon/HeaderIcon';
 import MainLogo from 'src/common/MainLogo';
 import Popover from 'src/components/Popover';
 import { headerContacts } from 'src/constants/headerUrl';
 import { PATHS } from 'src/constants/navPaths';
+import { AuthContext } from 'src/contexts/auth.context';
+import authenticateSerivce from 'src/services/auth.services';
+
+const IS_LOGGED_IN = true;
 
 export default function Header() {
+    const { auth, dispatch } = useContext(AuthContext);
     const [onChangeForm, setOnChangeForm] = useState(false);
-    const [isAuthen] = useState(false);
+
+    const { mutate: logoutMutation } = useMutation({
+        mutationFn: () => authenticateSerivce.logout(),
+        onSuccess: () => {
+            dispatch({ type: 'SET_AUTHENTICATED', payload: false });
+        }
+    });
 
     const handleOnChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.value !== '') {
@@ -16,6 +28,10 @@ export default function Header() {
         } else {
             setOnChangeForm(false);
         }
+    };
+
+    const handleLogout = () => {
+        logoutMutation();
     };
 
     return (
@@ -62,9 +78,9 @@ export default function Header() {
                             Tiếng Việt
                             <ChevronIcon />
                         </Popover>
-                        {/* Unauthenticated */}
 
-                        {isAuthen ? (
+                        {/* Unauthenticated */}
+                        {auth.isAuthenticated !== IS_LOGGED_IN ? (
                             <>
                                 <li className='flex cursor-pointer items-center font-medium hover:text-gray-300'>
                                     <Link to={PATHS.AUTH_PAGES.REGISTER}>Đăng ký</Link>
@@ -78,13 +94,15 @@ export default function Header() {
                             <Popover
                                 renderPopover={
                                     <div className='flex flex-col bg-white'>
-                                        <Link className='px-4 py-3 hover:bg-gray-50 hover:text-cyan-500' to={'/'}>
+                                        <Link className='px-4 py-3 hover:bg-gray-50 hover:text-cyan-500' to={'/profile'}>
                                             Tài khoản của tôi
                                         </Link>
                                         <Link className='px-4 py-3 hover:bg-gray-50 hover:text-cyan-500' to={'/'}>
                                             Đơn mua
                                         </Link>
-                                        <button className='px-4 py-3 text-left hover:bg-gray-50 hover:text-cyan-500'>Đăng xuất</button>
+                                        <button onClick={handleLogout} className='px-4 py-3 text-left hover:bg-gray-50 hover:text-cyan-500'>
+                                            Đăng xuất
+                                        </button>
                                     </div>
                                 }
                                 className='flex cursor-pointer items-center text-sm font-normal hover:text-gray-300'
