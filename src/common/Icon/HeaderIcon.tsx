@@ -110,3 +110,19 @@ export function CartIcon({ className = 'h-4 w-4' }: Props) {
         </svg>
     );
 }
+
+export function ChevronLeft({ className = 'h-4 w-4', color = '#fff' }: { className?: string; color?: string }) {
+    return (
+        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={2} stroke={color} className={className}>
+            <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
+        </svg>
+    );
+}
+
+export function ChevronRight({ className = 'h-4 w-4', color = '#fff' }: { className?: string; color?: string }) {
+    return (
+        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={2} stroke={color} className={className}>
+            <path strokeLinecap='round' strokeLinejoin='round' d='m8.25 4.5 7.5 7.5-7.5 7.5' />
+        </svg>
+    );
+}

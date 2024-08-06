@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, HttpStatusCode, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
-import { clearLocalStorage, getTokenFromLocalStorage, saveToLocalStorage } from 'src/utils/local_storage';
+import { clearLocalStorage, getTokenFromLocalStorage, saveToLocalStorage, saveUserProfileToLocalStorage } from 'src/utils/local_storage';
 
 class HttpClient {
     private static instance: HttpClient;
@@ -38,6 +38,7 @@ class HttpClient {
                 if (url && ['login', 'register'].includes(url)) {
                     this.access_token = response.data.data.access_token;
                     saveToLocalStorage(this.access_token);
+                    saveUserProfileToLocalStorage(response.data.data.user);
                 } else if (url && url === 'logout') {
                     this.access_token = '';
                     clearLocalStorage();

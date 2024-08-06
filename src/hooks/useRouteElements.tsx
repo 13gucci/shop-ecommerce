@@ -3,6 +3,8 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from 'src/contexts/auth.context';
 import AuthenticationLayout from 'src/layouts/AuthenticationLayout';
 import MainLayout from 'src/layouts/MainLayout';
+import AllCategoriesPage from 'src/pages/AllCategoriesPage';
+import CartPage from 'src/pages/CartPage';
 import LoginPage from 'src/pages/LoginPage';
 import ProductListPage from 'src/pages/ProductListPage';
 import ProfilePage from 'src/pages/ProfilePage';
@@ -14,7 +16,7 @@ const ProtectedRoute = () => {
     return auth.isAuthenticated ? <Outlet /> : <Navigate to={'/login'} />;
 };
 
-//Route middleware ngăn người dùng move ra login/register khi đã loged
+//Route middleware ngăn người dùng move ra login/register khi đã logged in
 const RejectedRoute = () => {
     const { auth } = useContext(AuthContext);
     return auth.isAuthenticated ? <Navigate to={'/'} /> : <Outlet />;
@@ -22,6 +24,23 @@ const RejectedRoute = () => {
 
 export default function useRouteElements() {
     const element = createBrowserRouter([
+        {
+            index: true,
+            path: '/',
+            element: (
+                <MainLayout>
+                    <ProductListPage />
+                </MainLayout>
+            )
+        },
+        {
+            path: '/all_categories',
+            element: (
+                <MainLayout>
+                    <AllCategoriesPage />
+                </MainLayout>
+            )
+        },
         {
             path: '',
             element: <ProtectedRoute />,
@@ -31,6 +50,14 @@ export default function useRouteElements() {
                     element: (
                         <MainLayout>
                             <ProfilePage />
+                        </MainLayout>
+                    )
+                },
+                {
+                    path: '/cart',
+                    element: (
+                        <MainLayout>
+                            <CartPage />
                         </MainLayout>
                     )
                 }
@@ -57,15 +84,6 @@ export default function useRouteElements() {
                     )
                 }
             ]
-        },
-        {
-            index: true,
-            path: '/',
-            element: (
-                <MainLayout>
-                    <ProductListPage />
-                </MainLayout>
-            )
         }
     ]);
 
