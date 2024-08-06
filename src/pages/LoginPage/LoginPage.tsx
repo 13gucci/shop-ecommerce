@@ -1,7 +1,7 @@
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import HidePasswordIcon from 'src/common/HidePasswordIcon';
@@ -10,12 +10,14 @@ import VisiblePasswordIcon from 'src/common/VisiblePasswordIcon';
 import CustomInput from 'src/components/CustomInput';
 import { PATHS } from 'src/constants/navPaths';
 import { TitlePages } from 'src/constants/titlePage';
+import { AuthContext } from 'src/contexts/auth.context';
 import { LoginFormType, LoginSchema } from 'src/schema/AuthenticationSchema';
 import authenticateSerivce from 'src/services/auth.services';
 import { TCommonResponse } from 'src/types/common.type';
 import { isUnprocessableEntityError } from 'src/utils/error';
 
 export default function LoginPage() {
+    const { dispatch } = useContext(AuthContext);
     const {
         register,
         setError,
@@ -46,6 +48,9 @@ export default function LoginPage() {
 
     const onSubmit: SubmitHandler<LoginFormType> = (data) => {
         loginMutation(data, {
+            onSuccess: () => {
+                dispatch({ type: 'SET_AUTHENTICATED', payload: true });
+            },
             onError: (err) => {
                 if (isUnprocessableEntityError<TCommonResponse<LoginFormType>>(err)) {
                     const objErrorForm = err.response?.data.data;

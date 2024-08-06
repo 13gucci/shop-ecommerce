@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import { RouterProvider } from 'react-router-dom';
+import AuthProvider from 'src/contexts/auth.context';
 import useRouteElements from 'src/hooks/useRouteElements';
 
 function App() {
@@ -17,9 +18,11 @@ function App() {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <Toaster />
-            <ReactQueryDevtools initialIsOpen={false} />
-            <RouterProvider router={router} />
+            <AuthProvider>
+                <Toaster />
+                <ReactQueryDevtools initialIsOpen={false} />
+                <RouterProvider router={router} />
+            </AuthProvider>
         </QueryClientProvider>
     );
 }

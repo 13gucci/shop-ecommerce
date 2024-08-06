@@ -1,18 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import { omit } from 'lodash';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import CustomInput from 'src/components/CustomInput';
 import { PATHS } from 'src/constants/navPaths';
 import { TitlePages } from 'src/constants/titlePage';
+import { AuthContext } from 'src/contexts/auth.context';
 import { RegisterFormType, RegisterSchema } from 'src/schema/AuthenticationSchema';
 import authenticateSerivce from 'src/services/auth.services';
 import { TCommonResponse } from 'src/types/common.type';
 import { isUnprocessableEntityError } from 'src/utils/error';
 
 export default function RegisterPage() {
+    const { dispatch } = useContext(AuthContext);
     const {
         register,
         handleSubmit,
@@ -33,7 +35,9 @@ export default function RegisterPage() {
     const onSubmit: SubmitHandler<RegisterFormType> = (data) => {
         const body = omit(data, ['confirm_password']);
         registerMutation(body, {
-            onSuccess: (data) => {},
+            onSuccess: () => {
+                dispatch({ type: 'SET_AUTHENTICATED', payload: true });
+            },
             onError: (err) => {
                 if (isUnprocessableEntityError<TCommonResponse<Omit<RegisterFormType, 'confirm_password'>>>(err)) {
                     const objErrorForm = err.response?.data.data;

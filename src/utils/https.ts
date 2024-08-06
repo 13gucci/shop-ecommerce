@@ -1,11 +1,14 @@
 import axios, { AxiosInstance, HttpStatusCode, isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { clearLocalStorage, getTokenFromLocalStorage, saveToLocalStorage } from 'src/utils/local_storage';
 
 class HttpClient {
     private static instance: HttpClient;
     private axiosInstance: AxiosInstance;
+    private access_token: string;
 
     private constructor() {
+        this.access_token = getTokenFromLocalStorage('access_token');
         this.axiosInstance = axios.create({
             baseURL: import.meta.env.VITE_BASE_URL,
             timeout: 10000,
@@ -15,8 +18,11 @@ class HttpClient {
         });
 
         this.axiosInstance.interceptors.request.use(
-            function (config) {
+            (config) => {
                 // Do something before request is sent
+                if (this.access_token) {
+                    config.headers.Authorization = this.access_token;
+                }
                 return config;
             },
             function (error) {
@@ -27,7 +33,15 @@ class HttpClient {
 
         // Block to manage response if error is not 422 then toast
         this.axiosInstance.interceptors.response.use(
-            function (response) {
+            (response) => {
+                const { url } = response.config;
+                if (url && ['login', 'register'].includes(url)) {
+                    this.access_token = response.data.data.access_token;
+                    saveToLocalStorage(this.access_token);
+                } else if (url && url === 'logout') {
+                    this.access_token = '';
+                    clearLocalStorage();
+                }
                 return response;
             },
             function (error) {
