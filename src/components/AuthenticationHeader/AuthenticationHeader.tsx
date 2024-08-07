@@ -13,7 +13,7 @@ export default function AuthenticationHeader() {
                 <div className='flex items-center justify-between'>
                     <nav className='flex items-end'>
                         <Link to={PATHS.AUTH_PAGES.HOME} className='px-4'>
-                            <MainLogo className='h-9 fill-shopeeOrange xl:h-11' />
+                            <MainLogo className='h-9 fill-[#d0011b] xl:h-11' />
                         </Link>
                         <span className='text-xl xl:text-2xl'>{mode === 'register' ? 'Đăng ký' : 'Đăng nhập'}</span>
                     </nav>

@@ -15,7 +15,8 @@ module.exports = {
                 shopeeOrange2: '#fb5431',
                 footerBlack: '#000000a6',
                 footerBackground: '#f5f5f5',
-                textError: '#ff424f'
+                textError: '#ff424f',
+                shopeeRed: '#d0011b'
             },
             backgroundImage: {
                 main: 'url(https://down-vn.img.susercontent.com/file/sg-11134004-7rd40-lwqodja4x88980)'
