@@ -6,12 +6,12 @@ import ProductItem from 'src/pages/ProductListPage/components/ProductItem';
 import SortProductList from 'src/pages/ProductListPage/components/SortProductList';
 
 const carouselLinks = [
+    'https://cf.shopee.vn/file/vn-11134258-7r98o-lykt0gko8ko15f',
+    'https://cf.shopee.vn/file/vn-11134258-7r98o-lyk8esgulyrx06',
     'https://cf.shopee.vn/file/vn-11134258-7r98o-lybr037hj5u56c',
     'https://cf.shopee.vn/file/vn-50009109-727a24a85a60935da5ccb9008298f681',
     'https://cf.shopee.vn/file/vn-11134258-7r98o-lyd5c98zk3f17f',
-    'https://cf.shopee.vn/file/vn-11134258-7r98o-lykt0gko8ko15f',
-    'https://cf.shopee.vn/file/vn-11134258-7r98o-lyd5exd8wf9p06',
-    'https://cf.shopee.vn/file/vn-11134258-7r98o-lyk8esgulyrx06'
+    'https://cf.shopee.vn/file/vn-11134258-7r98o-lyd5exd8wf9p06'
 ];
 
 export default function ProductListPage() {
@@ -50,7 +50,7 @@ export default function ProductListPage() {
                         {carouselLinks.map((_, index) => (
                             <div
                                 key={index}
-                                className={`h-3 w-3 rounded-full border border-gray-400 ${currentIndex === index ? 'bg-orange-500' : 'bg-gray-100/15'}`}
+                                className={`h-3 w-3 rounded-full border border-gray-700/30 ${currentIndex === index ? 'bg-[#d0011b]' : 'bg-gray-200/50'}`}
                             ></div>
                         ))}
                     </div>
@@ -68,13 +68,13 @@ export default function ProductListPage() {
                 </div>
                 {/* End Carousel */}
 
-                <div className='mt-10 grid grid-cols-12 gap-4'>
+                <div className='mt-10 grid grid-cols-12 gap-5'>
                     <div className='col-span-2'>
                         <AsideFilter />
                     </div>
                     <div className='col-span-10 ml-2 flex flex-col'>
                         <SortProductList />
-                        <div className='mt-1 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                        <div className='mt-2 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                             {Array(30)
                                 .fill(0)
                                 .map((_, index) => (

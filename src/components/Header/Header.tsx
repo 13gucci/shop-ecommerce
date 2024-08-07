@@ -35,7 +35,7 @@ export default function Header() {
     };
 
     return (
-        <header className='bg-gradient-to-b from-[#f53d2d] to-[#f63] pb-5 pt-1'>
+        <header className='bg-[#d0011b] pb-5 pt-1'>
             <div className='container'>
                 {/* First Row */}
                 <nav className='flex justify-between'>
@@ -134,7 +134,7 @@ export default function Header() {
                                 placeholder='FREE SHIP TỪ ĐƠN 0Đ'
                                 className='ml-2 w-[92%] -translate-x-1 placeholder:font-light focus:outline focus:outline-[1.5px] focus:outline-offset-[13px] focus:outline-black'
                             />
-                            <button type='submit' className='h-[34px] w-[8%] rounded-sm bg-shopeeOrange px-4 hover:bg-opacity-95'>
+                            <button type='submit' className='h-[34px] w-[8%] rounded-sm bg-[#d0011b] px-4 hover:bg-opacity-95'>
                                 <SearchIcon className='mx-auto h-4 w-4 font-bold text-white' />
                             </button>
                             {!!onChangeForm && <div className='absolute bottom-0 left-0 right-0 translate-y-6 transform bg-white'>123</div>}
@@ -172,7 +172,7 @@ export default function Header() {
                                     <div className='text-sm'>Thêm hàng vào giỏ hàng</div>
                                     <Link
                                         to={'/'}
-                                        className='rounded-sm bg-shopeeOrange px-4 py-2 text-sm capitalize text-white hover:opacity-90'
+                                        className='rounded-sm bg-[#d0011b] px-4 py-2 text-sm capitalize text-white hover:opacity-90'
                                     >
                                         Xem giỏ hàng
                                     </Link>
