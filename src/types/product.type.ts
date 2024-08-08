@@ -12,28 +12,28 @@ import { TPagination } from 'src/types/pagination.type';
 // price_min: number. Giá thấp nhất
 // name: string. Tên sản phẩm (lưu ý Tên sản phẩm tiếng Việt phải gõ đầy đủ dấu)
 
-enum ESortBy {
+export enum ESortBy {
     CREATED_AT = 'createdAt',
     VIEW = 'view',
     SOLD = 'sold',
     PRICE = 'price'
 }
 
-enum EORDER {
+export enum EOrder {
     DESC = 'desc',
     ASC = 'asc'
 }
 
-export type TQueryParamsConfig = {
-    page?: number;
-    limit?: number;
-    order?: EORDER;
+export type TQueryParamProduct = {
+    page?: number | string;
+    limit?: number | string;
+    order?: EOrder;
     sort_by?: ESortBy;
     category?: string;
     exclude?: string;
-    rating_filter?: number;
-    price_max?: number;
-    price_min?: number;
+    rating_filter?: number | string;
+    price_max?: number | string;
+    price_min?: number | string;
     name?: string;
 };
 
