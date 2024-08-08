@@ -46,3 +46,41 @@ export const renderArrayPaginate = ({ page, page_size, range }: { page: number; 
 
     return uniquePages;
 };
+export const getRandomProvince = () => {
+    const provinces = [
+        'Hà Nội',
+        'Hồ Chí Minh',
+        'Đà Nẵng',
+        'Hải Phòng',
+        'Cần Thơ',
+        'Bình Dương',
+        'Đồng Nai',
+        'Quảng Ninh',
+        'Khánh Hòa',
+        'Lâm Đồng',
+        'Nghệ An',
+        'Thanh Hóa',
+        'Thái Nguyên',
+        'Bắc Giang',
+        'Bình Thuận',
+        'Bình Định',
+        'Cà Mau',
+        'Đắk Lắk',
+        'Điện Biên',
+        'Hà Tĩnh'
+    ];
+
+    // Chọn ngẫu nhiên một tỉnh thành từ danh sách
+    return provinces[(Math.random() * provinces.length) | 0];
+};
+export const splitPath = (path: string) => {
+    // Remove leading and trailing slashes for easier processing
+    const trimmedPath = path.replace(/^\/+|\/+$/g, '');
+    // Split the trimmed path
+    const parts = trimmedPath.split('/');
+    // Add the leading slash as the first element if the original path started with a slash
+    if (path.startsWith('/')) {
+        parts.unshift('/');
+    }
+    return parts;
+};

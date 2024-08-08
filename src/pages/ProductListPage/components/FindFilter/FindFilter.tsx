@@ -13,8 +13,8 @@ export default function FindFilter({ listFilter, title, className }: Props) {
             <ul>
                 {listFilter.map((item, index) => (
                     <li key={index} className='my-3 flex items-start space-x-2 text-sm leading-tight'>
-                        <input type='checkbox' className='mt-1' />
-                        <span>{item}</span>
+                        <input id={`${index}`} type='checkbox' className='mt-1' />
+                        <label htmlFor={`${index}`}>{item}</label>
                     </li>
                 ))}
             </ul>

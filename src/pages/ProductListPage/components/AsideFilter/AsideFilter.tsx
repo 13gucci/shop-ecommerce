@@ -1,11 +1,21 @@
-import { Link } from 'react-router-dom';
+import clsx from 'clsx';
+import { createSearchParams, Link } from 'react-router-dom';
 import { OutlineRatingStar, SolidRatingStar } from 'src/common/Icon/HeaderIcon';
 import CustomButton from 'src/components/CustomButton';
 import CustomInput from 'src/components/CustomInput';
 import { BrandingFilter, CategoryFilter, LocationFilter } from 'src/constants/findFilter';
 import FindFilter from 'src/pages/ProductListPage/components/FindFilter';
+import { TQueryString } from 'src/pages/ProductListPage/ProductListPage';
+import { TCategory } from 'src/types/category.type';
 
-export default function AsideFilter() {
+type Props = {
+    queryParams: TQueryString;
+    categories_data: TCategory[];
+};
+
+export default function AsideFilter({ queryParams, categories_data }: Props) {
+    const { category: current_category } = queryParams;
+
     return (
         <div className='mt-2'>
             <Link to={'/all_categories'} className='flex items-center space-x-2 text-[15px] font-bold capitalize'>
@@ -25,29 +35,33 @@ export default function AsideFilter() {
             <div className='my-3 h-[1px] w-full bg-gray-300'></div>
 
             <ul className='text-sm font-normal'>
-                <li className='ml-2 py-2 pl-2'>
-                    <Link to={'/'} className='relative'>
-                        <svg viewBox='0 0 4 7' className='absolute left-[-15px] top-1/2 h-2.5 w-2.5 -translate-y-[50%]' fill='red'>
-                            <polygon points='4 3.5 0 0 0 7' />
-                        </svg>
-                        <span className='font-bold'>Thời trang nam</span>
-                    </Link>
-                </li>
-                <li className='ml-2 py-2 pl-2'>
-                    <Link to={'/'} className='relative'>
-                        <span>Điện thoại</span>
-                    </Link>
-                </li>
-                <li className='ml-2 py-2 pl-2'>
-                    <Link to={'/'} className='relative'>
-                        <span>Điện thoại</span>
-                    </Link>
-                </li>
-                <li className='ml-2 py-2 pl-2'>
-                    <Link to={'/'} className='relative'>
-                        <span>Điện thoại</span>
-                    </Link>
-                </li>
+                {categories_data.map((category) => (
+                    <li className='ml-2 py-2 pl-2' key={category._id}>
+                        <Link
+                            to={{
+                                hash: '/',
+                                search: createSearchParams({
+                                    ...queryParams,
+                                    category: category._id
+                                }).toString()
+                            }}
+                            className='relative'
+                        >
+                            {current_category === category._id && (
+                                <svg viewBox='0 0 4 7' className='absolute left-[-15px] top-1/2 h-2.5 w-2.5 -translate-y-[50%]' fill='red'>
+                                    <polygon points='4 3.5 0 0 0 7' />
+                                </svg>
+                            )}
+                            <span
+                                className={clsx('font-bold', {
+                                    'text-shopeeRed': current_category === category._id
+                                })}
+                            >
+                                {category.name}
+                            </span>
+                        </Link>
+                    </li>
+                ))}
             </ul>
 
             <div className='mt-4 flex items-center space-x-2 text-[15px] font-bold uppercase'>

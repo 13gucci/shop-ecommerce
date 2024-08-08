@@ -3,7 +3,7 @@ import { TruckShipping } from 'src/common/Icon/HeaderIcon';
 import RatingStar from 'src/components/RatingStar';
 import Tag from 'src/pages/ProductListPage/components/Tag/Tag';
 import { TProduct } from 'src/types/product.type';
-import { formatPrice, formatSoldProduct } from 'src/utils/utils';
+import { formatPrice, formatSoldProduct, getRandomProvince } from 'src/utils/utils';
 
 type Props = {
     product: TProduct;
@@ -36,7 +36,7 @@ export default function ProductItem({ product }: Props) {
                         {/* Old Price */}
                         <div className='trun max-w-[50%] text-xs text-gray-500 line-through'>{formatPrice(product.price)}</div>
                         {/* New price */}
-                        <div className='trun text-shopeeRed max-w-[50%] text-base'>
+                        <div className='trun max-w-[50%] text-base text-shopeeRed'>
                             <span>₫</span>
                             {formatPrice(product.price_before_discount)}
                         </div>
@@ -48,9 +48,12 @@ export default function ProductItem({ product }: Props) {
                     </div>
 
                     {/* Shipping */}
-                    <div className='mt-3 flex items-center space-x-1'>
-                        <TruckShipping />
-                        <span className='text-xs text-[#26AA99]'>3 - 5 ngày</span>
+                    <div className='mt-4 flex items-center justify-between'>
+                        <div className='flex items-center space-x-1'>
+                            <TruckShipping />
+                            <span className='text-xs text-[#26AA99]'>3 - 5 ngày</span>
+                        </div>
+                        <div className='text-xs text-gray-800'>{getRandomProvince()}</div>
                     </div>
                 </div>
             </div>
