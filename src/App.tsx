@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { keepPreviousData, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import { RouterProvider } from 'react-router-dom';
@@ -11,7 +11,8 @@ function App() {
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: {
-                refetchOnWindowFocus: false
+                refetchOnWindowFocus: false,
+                placeholderData: keepPreviousData
             }
         }
     });
