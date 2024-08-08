@@ -3,5 +3,6 @@ export const API_ENDPOINTs = {
     LOGIN: 'login',
     LOGOUT: 'logout',
     READ_PRODUCT: 'products',
-    READ_PRODUCTS: 'products'
+    READ_PRODUCTS: 'products',
+    READ_CATEGORIES: 'categories'
 } as const;

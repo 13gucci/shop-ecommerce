@@ -6,6 +6,8 @@ import httpClient from 'src/utils/https';
 class ProductServices {
     private static instance: ProductServices;
 
+    private constructor() {}
+
     public static getInstance(): ProductServices {
         if (!ProductServices.instance) {
             ProductServices.instance = new ProductServices();
@@ -25,4 +27,5 @@ class ProductServices {
 }
 
 const productServices = ProductServices.getInstance();
+
 export default productServices;
