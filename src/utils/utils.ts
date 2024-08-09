@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 export const formatPrice = (beforeFormat: number) => {
     const afterFormat = new Intl.NumberFormat('vi-VN').format(beforeFormat);
     return afterFormat;
@@ -87,4 +88,34 @@ export const splitPath = (path: string) => {
 
 export type NoUndefinedField<T> = {
     [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
+};
+
+export const calculateDiscountPercentageVND = (currentPriceVND: number, originalPriceVND: number): number => {
+    if (originalPriceVND <= 0) {
+        throw new Error('Giá gốc phải lớn hơn 0');
+    }
+
+    const discount = originalPriceVND - currentPriceVND;
+    const discountPercentage = (discount / originalPriceVND) * 100;
+
+    return Math.round(discountPercentage); // Làm tròn đến số nguyên gần nhất
+};
+function generateSlug(title: string): string {
+    return title
+        .toLowerCase() // Chuyển thành chữ thường
+        .trim() // Xóa khoảng trắng ở đầu và cuối
+        .normalize('NFD') // Chuẩn hóa chuỗi để phân tách các ký tự kết hợp
+        .replace(/[\u0300-\u036f]/g, '') // Xóa các dấu tiếng Việt
+        .replace(/[^a-z0-9\s-]/g, '') // Xóa các ký tự không phải chữ cái, số, khoảng trắng hoặc dấu gạch ngang
+        .replace(/\s+/g, '-') // Thay khoảng trắng bằng dấu gạch ngang
+        .replace(/-+/g, '-'); // Xóa các dấu gạch ngang liên tiếp
+}
+
+export const generateNameId = ({ name, id }: { name: string; id: string }) => {
+    return generateSlug(name).replace(/\s/g, '-') + `-i-${id}`;
+};
+
+export const getIdFromNameId = (nameId: string) => {
+    const arr = nameId.split('-i-');
+    return arr[arr.length - 1];
 };
