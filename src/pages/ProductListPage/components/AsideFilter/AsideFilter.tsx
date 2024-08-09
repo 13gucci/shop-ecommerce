@@ -1,12 +1,17 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
-import { createSearchParams, Link } from 'react-router-dom';
+import { omit } from 'lodash';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { OutlineRatingStar, SolidRatingStar } from 'src/common/Icon/HeaderIcon';
 import CustomButton from 'src/components/CustomButton';
-import CustomInput from 'src/components/CustomInput';
+import CustomInputNumber from 'src/components/CustomInputNumber';
 import { BrandingFilter, CategoryFilter, LocationFilter } from 'src/constants/findFilter';
 import FindFilter from 'src/pages/ProductListPage/components/FindFilter';
 import { TQueryString } from 'src/pages/ProductListPage/ProductListPage';
+import { filterRangePriceSchema, TFilterRangePrice } from 'src/schema/RangePriceFilterSchema';
 import { TCategory } from 'src/types/category.type';
+import { ObjectSchema } from 'yup';
 
 type Props = {
     queryParams: TQueryString;
@@ -14,7 +19,41 @@ type Props = {
 };
 
 export default function AsideFilter({ queryParams, categories_data }: Props) {
+    const navigate = useNavigate();
+
+    const {
+        handleSubmit,
+        control,
+        formState: { errors },
+        reset
+    } = useForm<TFilterRangePrice>({
+        defaultValues: {
+            price_max: '',
+            price_min: ''
+        },
+        resolver: yupResolver<TFilterRangePrice>(filterRangePriceSchema as ObjectSchema<TFilterRangePrice>)
+    });
+
     const { category: current_category } = queryParams;
+
+    const onSubmit: SubmitHandler<TFilterRangePrice> = (data) => {
+        navigate({
+            pathname: '/',
+            search: createSearchParams({
+                ...queryParams,
+                price_max: data.price_max,
+                price_min: data.price_min
+            }).toString()
+        });
+    };
+
+    const handleRemoveAll = () => {
+        reset();
+        navigate({
+            pathname: '/',
+            search: createSearchParams(omit(queryParams, ['price_min', 'price_max', 'rating_filter', 'category'])).toString()
+        });
+    };
 
     return (
         <div className='mt-2'>
@@ -85,25 +124,38 @@ export default function AsideFilter({ queryParams, categories_data }: Props) {
 
             <div className='mt-4'>
                 <div className='text-sm font-semibold capitalize text-gray-800'>khoảng giá</div>
-                <form className='mt-2'>
+                <form className='mt-2' onSubmit={handleSubmit(onSubmit)}>
                     <div className='flex items-start'>
-                        <CustomInput
-                            type='text'
-                            className='block'
-                            placeholder='TỪ'
-                            classNameInput='px-1 py-1 text-sm w-full outline-none border border-gray-300'
-                            name='from'
+                        <Controller
+                            control={control}
+                            name='price_min'
+                            render={({ field }) => (
+                                <CustomInputNumber
+                                    placeholder='TỪ'
+                                    {...field}
+                                    classNameInput='px-1 py-1 text-sm w-full outline-none border border-gray-300'
+                                />
+                            )}
                         />
+
                         <div className='mx-2 mt-2 shrink-0'>-</div>
-                        <CustomInput
-                            type='text'
-                            className=''
-                            placeholder='ĐẾN'
-                            classNameInput='px-1 py-1 text-sm w-full outline-none border border-gray-300'
-                            name='to'
+
+                        <Controller
+                            control={control}
+                            name='price_max'
+                            render={({ field }) => (
+                                <CustomInputNumber
+                                    {...field}
+                                    placeholder='ĐẾN'
+                                    classNameInput='px-1 py-1 text-sm w-full outline-none border border-gray-300'
+                                />
+                            )}
                         />
                     </div>
-                    <CustomButton className='w-full bg-[#d0011b] py-2 text-sm uppercase text-white hover:opacity-80'>Áp dụng</CustomButton>
+                    <div className='min-h-[1.25rem] text-center text-sm text-red-600'>{errors.price_min?.message}</div>
+                    <CustomButton type='submit' className='w-full bg-[#d0011b] py-2 text-sm uppercase text-white hover:opacity-80'>
+                        Áp dụng
+                    </CustomButton>
                 </form>
             </div>
             <div className='my-3 h-[1px] w-full bg-gray-300'></div>
@@ -118,7 +170,16 @@ export default function AsideFilter({ queryParams, categories_data }: Props) {
                             const countStar = 5 - index;
                             return (
                                 <li key={index}>
-                                    <Link to={'/'} className='my-3 flex items-center space-x-1'>
+                                    <Link
+                                        to={{
+                                            pathname: '/',
+                                            search: createSearchParams({
+                                                ...queryParams,
+                                                rating_filter: String(countStar)
+                                            }).toString()
+                                        }}
+                                        className='my-3 flex items-center space-x-1'
+                                    >
                                         {Array(countStar)
                                             .fill(0)
                                             .map((_, index) => (
@@ -144,7 +205,9 @@ export default function AsideFilter({ queryParams, categories_data }: Props) {
             <FindFilter className='mt-5' listFilter={BrandingFilter} title='thương hiệu' />
             <div className='my-3 h-[1px] w-full bg-gray-300'></div>
 
-            <CustomButton className='w-full bg-[#d0011b] py-2 text-sm uppercase text-white hover:opacity-80'>Xoá tất cả</CustomButton>
+            <CustomButton onClick={handleRemoveAll} className='w-full bg-[#d0011b] py-2 text-sm uppercase text-white hover:opacity-80'>
+                Xoá tất cả
+            </CustomButton>
         </div>
     );
 }

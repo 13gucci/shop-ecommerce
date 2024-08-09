@@ -6,6 +6,7 @@ import MainLayout from 'src/layouts/MainLayout';
 import AllCategoriesPage from 'src/pages/AllCategoriesPage';
 import CartPage from 'src/pages/CartPage';
 import LoginPage from 'src/pages/LoginPage';
+import ProductDetailPage from 'src/pages/ProductDetailPage';
 import ProductListPage from 'src/pages/ProductListPage';
 import ProfilePage from 'src/pages/ProfilePage';
 import RegisterPage from 'src/pages/RegisterPage';
@@ -38,6 +39,14 @@ export default function useRouteElements() {
             element: (
                 <MainLayout>
                     <AllCategoriesPage />
+                </MainLayout>
+            )
+        },
+        {
+            path: '/:id',
+            element: (
+                <MainLayout>
+                    <ProductDetailPage />
                 </MainLayout>
             )
         },

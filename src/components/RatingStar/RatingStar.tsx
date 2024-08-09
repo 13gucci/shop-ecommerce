@@ -7,11 +7,13 @@ type Props = {
 
 export default function RatingStar({ darkColor = '#e7e5e4', lightColor = '#facc15', size = '3', ratingScore }: Props) {
     const getPercentageWidth = (index: number): string => {
-        if (ratingScore - index > 1) {
+        const difference = ratingScore - index;
+
+        if (difference >= 1) {
             return '100%';
-        } else if (ratingScore - index < 1 && ratingScore - index > 0) {
-            const result = (ratingScore - index) * 100;
-            return `${result.toFixed(2)}%`;
+        } else if (difference > 0 && difference < 1) {
+            const result = difference * 100;
+            return `${Math.min(Math.max(result, 0), 100).toFixed(2)}%`;
         } else {
             return '0%';
         }

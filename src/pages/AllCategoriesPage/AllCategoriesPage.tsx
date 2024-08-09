@@ -27,7 +27,8 @@ export default function AllCategoriesPage() {
 
     const { data: categoriesData } = useQuery({
         queryKey: ['categories'],
-        queryFn: () => categoryServices.readCategories()
+        queryFn: () => categoryServices.readCategories(),
+        staleTime: 1 * 60 * 1000
     });
 
     return (
@@ -52,7 +53,7 @@ export default function AllCategoriesPage() {
                                     category: category._id
                                 }).toString()
                             }}
-                            className='flex-col border-[0.8px] bg-white hover:shadow-lg'
+                            className='flex-col border-[0.8px] bg-white duration-300 hover:shadow-lg'
                             key={category._id}
                         >
                             <div className='relative w-[170px] pt-[100%]'>
