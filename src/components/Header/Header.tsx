@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BellIcon, CartIcon, ChevronIcon, GlobalIcon, QuestionMarkIcon, SearchIcon } from 'src/common/Icon/HeaderIcon';
 import MainLogo from 'src/common/MainLogo';
@@ -7,13 +7,17 @@ import Popover from 'src/components/Popover';
 import { headerContacts } from 'src/constants/headerUrl';
 import { PATHS } from 'src/constants/navPaths';
 import { AuthContext } from 'src/contexts/auth.context';
+import useDebouncedValue from 'src/hooks/useDebouncedValue';
 import authenticateSerivce from 'src/services/auth.services';
 
 const IS_LOGGED_IN = true;
 
 export default function Header() {
     const { auth, dispatch } = useContext(AuthContext);
-    const [onChangeForm, setOnChangeForm] = useState(false);
+
+    const [textSearchValue, setTextSearchValue] = useState<string>('');
+
+    const debouncedSearchTerm = useDebouncedValue(textSearchValue, 1000);
 
     const { mutate: logoutMutation } = useMutation({
         mutationFn: () => authenticateSerivce.logout(),
@@ -22,12 +26,13 @@ export default function Header() {
         }
     });
 
-    const handleOnChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value !== '') {
-            setOnChangeForm(true);
-        } else {
-            setOnChangeForm(false);
-        }
+    useEffect(() => {
+        console.log('Da dung debounce');
+    }, [debouncedSearchTerm]);
+
+    const handleChangeTextSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        setTextSearchValue(value);
     };
 
     const handleLogout = () => {
@@ -129,7 +134,8 @@ export default function Header() {
                     <div className='col-span-9 col-start-3'>
                         <form className='relative flex h-10 w-full items-center gap-3 rounded-sm bg-white p-1 shadow-sm'>
                             <input
-                                onChange={handleOnChangeForm}
+                                value={textSearchValue}
+                                onChange={handleChangeTextSearch}
                                 type='search'
                                 placeholder='FREE SHIP TỪ ĐƠN 0Đ'
                                 className='ml-2 w-[92%] -translate-x-1 placeholder:font-light focus:outline focus:outline-[1.5px] focus:outline-offset-[13px] focus:outline-black'
@@ -137,7 +143,7 @@ export default function Header() {
                             <button type='submit' className='h-[34px] w-[8%] rounded-sm bg-[#d0011b] px-4 hover:bg-opacity-95'>
                                 <SearchIcon className='mx-auto h-4 w-4 font-bold text-white' />
                             </button>
-                            {!!onChangeForm && <div className='absolute bottom-0 left-0 right-0 translate-y-6 transform bg-white'>123</div>}
+                            {false && <div className='absolute bottom-0 left-0 right-0 translate-y-6 transform bg-white'>123</div>}
                         </form>
                     </div>
                     <Popover
