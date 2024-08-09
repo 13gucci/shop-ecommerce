@@ -37,7 +37,7 @@ export default function ProductListPage() {
         },
         isUndefined
     );
-    console.log(queryParamFiltered);
+
     useEffect(() => {
         document.title = TitlePages.HOME;
     }, []);
