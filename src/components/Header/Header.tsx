@@ -1,20 +1,26 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { BellIcon, CartIcon, ChevronIcon, GlobalIcon, QuestionMarkIcon, SearchIcon } from 'src/common/Icon/HeaderIcon';
+import { Link, useNavigate } from 'react-router-dom';
+import { BellIcon, CartIcon, ChevronIcon, GlobalIcon, LoadingIncidator, QuestionMarkIcon, SearchIcon } from 'src/common/Icon/HeaderIcon';
 import MainLogo from 'src/common/MainLogo';
 import Popover from 'src/components/Popover';
 import { headerContacts } from 'src/constants/headerUrl';
 import { PATHS } from 'src/constants/navPaths';
 import { AuthContext } from 'src/contexts/auth.context';
 import useDebouncedValue from 'src/hooks/useDebouncedValue';
+import useQueryFiltered from 'src/hooks/useQueryFiltered';
 import authenticateSerivce from 'src/services/auth.services';
+import productServices from 'src/services/product.services';
+import { generateNameId } from 'src/utils/utils';
 
 const IS_LOGGED_IN = true;
+const ONE_MINUTE = 1 * 60 * 1000;
 
 export default function Header() {
     const { auth, dispatch } = useContext(AuthContext);
-
+    const queryParamFiltered = useQueryFiltered();
+    const navigate = useNavigate();
+    const [openDropMenu, setOpenDropmenu] = useState<boolean>(true);
     const [textSearchValue, setTextSearchValue] = useState<string>('');
 
     const debouncedSearchTerm = useDebouncedValue(textSearchValue, 1000);
@@ -26,13 +32,37 @@ export default function Header() {
         }
     });
 
+    const search = useQuery({
+        queryKey: ['search', queryParamFiltered],
+        queryFn: () =>
+            productServices.readProducts({
+                queryParams: {
+                    limit: 5,
+                    name: debouncedSearchTerm
+                }
+            }),
+        staleTime: ONE_MINUTE,
+        enabled: Boolean(debouncedSearchTerm)
+    });
+
     useEffect(() => {
-        console.log('Da dung debounce');
+        if (debouncedSearchTerm !== '') {
+            setOpenDropmenu(true);
+        } else {
+            setOpenDropmenu(false);
+        }
     }, [debouncedSearchTerm]);
 
     const handleChangeTextSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setTextSearchValue(value);
+    };
+
+    const handleNavigateSearch = ({ product_name, product_id }: { product_name: string; product_id: string }) => {
+        setOpenDropmenu(false);
+        navigate({
+            pathname: `/${generateNameId({ name: product_name, id: product_id })}`
+        });
     };
 
     const handleLogout = () => {
@@ -137,13 +167,26 @@ export default function Header() {
                                 value={textSearchValue}
                                 onChange={handleChangeTextSearch}
                                 type='search'
-                                placeholder='FREE SHIP TỪ ĐƠN 0Đ'
+                                placeholder='FREE SHIP TỪ ĐƠN 0Đ - Vui lòng nhập tiếng việt'
                                 className='ml-2 w-[92%] -translate-x-1 placeholder:font-light focus:outline focus:outline-[1.5px] focus:outline-offset-[13px] focus:outline-black'
                             />
+                            {search.isLoading && <LoadingIncidator className='h-5 w-5 animate-spin fill-shopeeRed text-gray-200' />}
                             <button type='submit' className='h-[34px] w-[8%] rounded-sm bg-[#d0011b] px-4 hover:bg-opacity-95'>
                                 <SearchIcon className='mx-auto h-4 w-4 font-bold text-white' />
                             </button>
-                            {false && <div className='absolute bottom-0 left-0 right-0 translate-y-6 transform bg-white'>123</div>}
+                            {openDropMenu && (
+                                <div className='absolute bottom-0 left-0 right-0 top-full z-50 mt-1 rounded-lg border'>
+                                    {search.data?.data.data?.products.map((product) => (
+                                        <button
+                                            onClick={() => handleNavigateSearch({ product_id: product._id, product_name: product.name })}
+                                            key={product._id}
+                                            className='w-full cursor-pointer bg-white p-2 text-left text-sm text-gray-700 hover:bg-gray-100'
+                                        >
+                                            {product.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </form>
                     </div>
                     <Popover
