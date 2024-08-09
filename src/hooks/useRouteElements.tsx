@@ -43,7 +43,7 @@ export default function useRouteElements() {
             )
         },
         {
-            path: '/:id',
+            path: '/:product_id',
             element: (
                 <MainLayout>
                     <ProductDetailPage />

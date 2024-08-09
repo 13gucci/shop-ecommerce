@@ -3,7 +3,7 @@ import { TruckShipping } from 'src/common/Icon/HeaderIcon';
 import RatingStar from 'src/components/RatingStar';
 import Tag from 'src/pages/ProductListPage/components/Tag/Tag';
 import { TProduct } from 'src/types/product.type';
-import { formatPrice, formatSoldProduct, getRandomProvince } from 'src/utils/utils';
+import { formatPrice, formatSoldProduct, generateNameId, getRandomProvince } from 'src/utils/utils';
 
 type Props = {
     product: TProduct;
@@ -11,7 +11,7 @@ type Props = {
 
 export default function ProductItem({ product }: Props) {
     return (
-        <Link to='/'>
+        <Link to={`/${generateNameId({ name: product.name, id: product._id })}`}>
             <div className='hover:shadow-dm relative bg-white shadow transition-transform hover:-translate-y-[2px] hover:outline hover:outline-[1px] hover:outline-offset-[0.5px] hover:outline-shopeeRed'>
                 <div className='relative w-full pt-[100%]'>
                     <img src={product.image} className='absolute left-0 top-0 h-full w-full' alt='' />

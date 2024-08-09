@@ -1,0 +1,3 @@
+import ProductDetailHeaderSkeleton from 'src/pages/ProductDetailPage/components/ProductDetailHeaderSkeleton/ProductDetailHeaderSkeleton';
+
+export default ProductDetailHeaderSkeleton;
