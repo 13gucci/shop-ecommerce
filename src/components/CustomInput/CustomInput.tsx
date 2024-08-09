@@ -22,6 +22,7 @@ export default function CustomInput({
     classNameError = 'mt-1 min-h-[1.5rem] text-[12px] text-textError',
     ...rest
 }: Props) {
+    //Ensure name must be provide
     const customRegister = register && name ? register(name, rules) : {};
 
     return (

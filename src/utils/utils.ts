@@ -84,3 +84,7 @@ export const splitPath = (path: string) => {
     }
     return parts;
 };
+
+export type NoUndefinedField<T> = {
+    [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
+};

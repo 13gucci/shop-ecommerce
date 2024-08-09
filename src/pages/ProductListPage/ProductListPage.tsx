@@ -37,7 +37,7 @@ export default function ProductListPage() {
         },
         isUndefined
     );
-
+    console.log(queryParamFiltered);
     useEffect(() => {
         document.title = TitlePages.HOME;
     }, []);
@@ -50,7 +50,8 @@ export default function ProductListPage() {
 
     const { data: categoriesData } = useQuery({
         queryKey: ['categories'],
-        queryFn: () => categoryServices.readCategories()
+        queryFn: () => categoryServices.readCategories(),
+        staleTime: ONE_MINUTE
     });
 
     return (

@@ -12,7 +12,7 @@ type Props = {
 export default function ProductItem({ product }: Props) {
     return (
         <Link to='/'>
-            <div className='hover:shadow-dm overflow-hidden rounded-sm bg-white shadow transition-transform hover:-translate-y-[3px]'>
+            <div className='hover:shadow-dm relative bg-white shadow transition-transform hover:-translate-y-[2px] hover:outline hover:outline-[1px] hover:outline-offset-[0.5px] hover:outline-shopeeRed'>
                 <div className='relative w-full pt-[100%]'>
                     <img src={product.image} className='absolute left-0 top-0 h-full w-full' alt='' />
                 </div>
