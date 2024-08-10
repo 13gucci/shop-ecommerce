@@ -8,7 +8,7 @@ import RatingStar from 'src/components/RatingStar';
 import { AuthContext } from 'src/contexts/auth.context';
 import ProductDetailHeaderSkeleton from 'src/pages/ProductDetailPage/components/ProductDetailHeaderSkeleton';
 import productServices from 'src/services/product.services';
-import { calculateDiscountPercentageVND, formatPrice, formatSoldProduct, getIdFromNameId } from 'src/utils/utils';
+import { calculateDiscountPercentageVND, formatPrice, formatSoldProduct, generateNameId, getIdFromNameId } from 'src/utils/utils';
 
 export default function ProductDetailPage() {
     const { auth } = useContext(AuthContext);
@@ -16,13 +16,18 @@ export default function ProductDetailPage() {
     const { product_id } = useParams();
 
     const id = getIdFromNameId(product_id as string);
-    console.log(id);
+
     const { data: productDetailData } = useQuery({
         queryKey: ['product', product_id],
         queryFn: () => productServices.readProductDetail({ productId: id }),
         enabled: id !== undefined,
         staleTime: 2 * 60 * 1000
     });
+    const queryParamFiltered = {
+        limit: '5',
+        page: '1',
+        category: productDetailData?.data.data?.category._id
+    };
 
     const [currentIndexImages, setCurrentIndexImages] = useState<number[]>([0, 5]);
     const [activeImage, setActiveImage] = useState<string>('');
@@ -31,6 +36,13 @@ export default function ProductDetailPage() {
     const currentImages = useMemo(() => {
         return product ? product.images.slice(...currentIndexImages) : [];
     }, [product, currentIndexImages]);
+
+    const { data: categoryRelatedData } = useQuery({
+        queryKey: ['product', queryParamFiltered],
+        queryFn: () => productServices.readProducts({ queryParams: queryParamFiltered }),
+        staleTime: 2 * 60 * 1000,
+        enabled: Boolean(product)
+    });
 
     useEffect(() => {
         if (product && product.images.length > 0) {
@@ -182,7 +194,7 @@ export default function ProductDetailPage() {
                                         <span className='text-base text-gray-500 line-through'>
                                             ₫ {formatPrice(product.price_before_discount)}
                                         </span>
-                                        <span className='text-3xl text-shopeeRed'>₫ {formatPrice(product.price)}</span>
+                                        <span className='ml-5 text-3xl text-shopeeRed'>₫ {formatPrice(product.price)}</span>
                                         <span
                                             className='ml-5 rounded-sm bg-shopeeRed px-1 py-[0.5px] text-xs text-white'
                                             style={{ fontWeight: 500 }}
@@ -298,14 +310,38 @@ export default function ProductDetailPage() {
                             </div>
                         </div>
                     </div>
-                    <div className='mt-4 bg-white p-5'>
-                        <div className='bg-[#f5f5f5] p-3 uppercase'>chi tiết sản phẩm</div>
-                        <div className='m-4 text-sm leading-loose'>
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(product.description)
-                                }}
-                            />
+                    <div className='mt-4 grid grid-cols-12 gap-3'>
+                        <div className='col-span-9'>
+                            <div className='bg-white p-5'>
+                                <div className='bg-[#f5f5f5] p-3 uppercase'>chi tiết sản phẩm</div>
+                                <div className='m-4 text-sm leading-loose'>
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: DOMPurify.sanitize(product.description)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='col-span-3'>
+                            <div className='bg-white'>
+                                <div className='p-5 text-base text-gray-600'>Top sản phẩm nổi bật</div>
+                                {categoryRelatedData?.data.data?.products.map((product) => (
+                                    <Link
+                                        to={`/${generateNameId({ name: product.name, id: product._id })}`}
+                                        className='block border-b p-6'
+                                        key={product._id}
+                                    >
+                                        <div className='relative w-full pt-[100%]'>
+                                            <img className='absolute left-0 top-0 h-full w-full' src={product.image} alt={product.name} />
+                                        </div>
+                                        <div className='p-3'>
+                                            <div className='line-clamp-2 text-sm text-gray-600'>{product.name}</div>
+                                            <div className='mt-2 text-shopeeRed'>đ {formatPrice(product.price)}</div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

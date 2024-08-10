@@ -60,6 +60,7 @@ export default function Header() {
 
     const handleNavigateSearch = ({ product_name, product_id }: { product_name: string; product_id: string }) => {
         setOpenDropmenu(false);
+        setTextSearchValue('');
         navigate({
             pathname: `/${generateNameId({ name: product_name, id: product_id })}`
         });
